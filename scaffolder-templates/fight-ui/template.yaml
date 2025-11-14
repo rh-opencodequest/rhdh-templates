@@ -46,10 +46,8 @@ spec:
       action: publish:gitlab
       input:
         sourcePath: ./source
-        description: "fight-ui sources"
         repoUrl: gitlab-gitlab.${{ parameters.openshiftCluster }}?owner=${{ user.entity.metadata.name }}&repo=fight-ui
         defaultBranch: main
-        protectDefaultBranch: false
         repoVisibility: public
 
     - id: registerSource
