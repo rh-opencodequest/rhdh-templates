@@ -210,13 +210,8 @@ spec:
       action: publish:gitlab
       input:
         repoUrl: "${{ parameters.repo.host }}.${{ parameters.openshiftCluster }}?owner=${{ user.entity.metadata.name }}&repo=${{parameters.component_id}}-gitops"
-        title: gitops resources for ${{ parameters.component_id }}
-        description: gitops resources for ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
         repoVisibility: public
-        branches:
-          - name: master
-            protected: false
 
     - id: create-argocd-resources
       name: Create ArgoCD Resources
