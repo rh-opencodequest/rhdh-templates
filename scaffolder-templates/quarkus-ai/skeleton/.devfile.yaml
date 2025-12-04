@@ -3,25 +3,31 @@ metadata:
   generateName: ${{values.artifact_id}}
 components:
   - name: development-tooling
+    attributes:
+      pod-overrides:
+        metadata:
+          annotations:
+            io.kubernetes.cri-o.Devices: "/dev/fuse,/dev/net/tun"
+        spec:
+          hostUsers: false
+      container-overrides: 
+        securityContext:
+          procMount: Unmasked
     container:
-#      image: quay.io/devfile/universal-developer-image:ubi8-277c10c
-      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      image: registry.redhat.io/devspaces/udi-rhel9:latest
       env:
         - name: USE_JAVA21
           value: "true"
-        - name: KUBEDOCK_ENABLED
-          value: "true"
         - name: DOCKER_HOST
-          value: "tcp://127.0.0.1:2475"
+          value: "unix:///tmp/storage-run-1000/podman/podman.sock"
         - name: TESTCONTAINERS_RYUK_DISABLED
           value: "true"
-#         - name: KUBEDOCK_PARAMS
-# #          value: "--reverse-proxy --kubeconfig /home/user/.kube/config --initimage quay.io/agiertli/kubedock:0.13.0"
-#           value: "--reverse-proxy"
         - name: QUARKUS_HTTP_HOST
           value: 0.0.0.0
         - name: MAVEN_OPTS
           value: "-Dmaven.repo.local=/home/user/.m2/repository"
+        - name: HOST_USERS
+          value: "false"
       memoryLimit: 4Gi
       cpuLimit: 2500m
       volumeMounts:
@@ -82,9 +88,15 @@ commands:
     exec:
       label: "Quarkus install"
       component: development-tooling
-      commandLine: "source /home/tooling/.sdkman/bin/sdkman-init.sh && sdk install quarkus"
+      commandLine: "curl -Ls https://sh.jbang.dev | bash -s - trust add https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/ && curl -Ls https://sh.jbang.dev | bash -s - app install --fresh --force quarkus@quarkusio"
+  - id: podman-start
+    exec:
+      label: "Podman start"
+      component: development-tooling
+      commandLine: "podman system service --time=0 &"
 
 events:
   postStart:
     - quarkus-devservices-config
     - install-quarkus
+    - podman-start
