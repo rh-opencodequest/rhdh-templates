@@ -45,6 +45,8 @@ spec:
   providesApis:
     - ${{ values.owner }}-${{ values.component_id }}
   system: ${{values.system}}
+  dependsOn:
+    - resource: ${{ values.component_id }}-db
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
@@ -59,4 +61,13 @@ spec:
   owner: ${{values.owner | dump}}
   definition:
     $text: ./openapi.yaml
-
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ${{ values.component_id }}-db
+  description: ${{ values.component_id }} Database
+spec:
+  type: database
+  owner: ${{ values.owner }}
+  system: ${{values.system}}
