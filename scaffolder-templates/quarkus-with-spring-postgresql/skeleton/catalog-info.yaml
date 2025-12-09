@@ -46,7 +46,7 @@ spec:
     - ${{ values.owner }}-${{ values.component_id }}
   system: ${{values.system}}
   dependsOn:
-    - resource: ${{ values.component_id }}-db
+    - resource:${{ values.component_id }}-db
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
