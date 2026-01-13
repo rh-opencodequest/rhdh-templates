@@ -5,7 +5,8 @@ components:
   - name: development-tooling
     container:
 #      image: quay.io/devfile/universal-developer-image:ubi8-277c10c
-      image: quay.io/devfile/universal-developer-image:ubi8-latest
+#      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      image: registry.redhat.io/devspaces/udi-rhel9
       env:
         - name: USE_JAVA21
           value: "true"
@@ -88,4 +89,4 @@ commands:
 events:
   postStart:
     - quarkus-devservices-config
-    - install-quarkus
+#    - install-quarkus
