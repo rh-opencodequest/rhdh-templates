@@ -88,4 +88,4 @@ commands:
 events:
   postStart:
     - quarkus-devservices-config
-    - install-quarkus
+#    - install-quarkus
